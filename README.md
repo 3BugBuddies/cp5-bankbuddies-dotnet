@@ -4,8 +4,6 @@ API REST desenvolvida com **ASP.NET Core 8** e **EF Core** — avaliação **CP5
 
 O serviço é o **back-office de uma operação bancária simplificada**: cadastro de **Clientes** e das **Contas** que cada cliente possui, com consulta de endereço por CEP integrada a um serviço externo.
 
-Aplica os padrões pedidos na CP5: **Clean Architecture** em 4 camadas, **Operation Result**, **erros customizados** lançados no Repository e traduzidos em HTTP na Application, **paginação estruturada com HATEOAS**, **autenticação/autorização via JWT** e **testes automatizados** (unidade + integração).
-
 ---
 
 ## Índice
@@ -120,10 +118,10 @@ cp5-bankbuddies-dotnet/
 Copie o arquivo de exemplo e preencha com sua credencial do Oracle FIAP:
 
 ```bash
-cp Banco.API/appsettings.Development.json.example Banco.API/appsettings.Development.json
+cp src/Banco.API/appsettings.Development.json.example src/Banco.API/appsettings.Development.json
 ```
 
-Edite `Banco.API/appsettings.Development.json`:
+Edite `src/Banco.API/appsettings.Development.json`:
 
 ```json
 "ConnectionStrings": {
@@ -145,13 +143,13 @@ dotnet build Banco.slnx
 Cria as tabelas `tb_cliente`, `tb_conta` e `tb_usuario` no Oracle configurado acima:
 
 ```bash
-dotnet ef database update --project Banco.Infrastructure/Banco.Infrastructure.csproj --startup-project Banco.API/Banco.API.csproj --context Banco.API.Infrastructure.Data.ApplicationContext
+dotnet ef database update --project src/Banco.Infrastructure/Banco.Infrastructure.csproj --startup-project src/Banco.API/Banco.API.csproj
 ```
 
 ### 4. Rodar
 
 ```bash
-dotnet run --project Banco.API/Banco.API.csproj
+dotnet run --project src/Banco.API/Banco.API.csproj
 ```
 
 A API sobe em `http://localhost:5299` (ou na porta definida pelo ambiente), com Swagger em `/swagger`.
