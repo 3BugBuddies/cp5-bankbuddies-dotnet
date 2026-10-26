@@ -28,6 +28,7 @@ Aplica os padrões pedidos na CP5: **Clean Architecture** em 4 camadas, **Operat
 | | |
 |---|---|
 | Swagger UI (local) | `http://localhost:5299/swagger` |
+| Coleção Postman | [`docs/postman/banco-api.postman_collection.json`](docs/postman/banco-api.postman_collection.json) |
 | Repositório | [3BugBuddies/cp5-bankbuddies-dotnet](https://github.com/3BugBuddies/cp5-bankbuddies-dotnet) |
 
 ---
@@ -247,6 +248,18 @@ dotnet test Banco.slnx
 ```
 
 **9 testes, todos passando** (7 no `Banco.Tests.Unit`, 2 no `Banco.Tests.Integration`). Os testes de Repository rodam contra `Microsoft.EntityFrameworkCore.InMemory` — não precisam do Oracle.
+
+### Via Postman
+
+A coleção em [`docs/postman/banco-api.postman_collection.json`](docs/postman/banco-api.postman_collection.json) cobre todos os endpoints, organizados em pastas:
+
+- **0 - Autenticação**: cria o usuário admin e faz login, salvando o token automaticamente.
+- **1 - Cliente** / **2 - Conta**: CRUD completo, incluindo uma requisição sem token para demonstrar o `401`.
+- **3 - Health**: os quatro health checks.
+- **4 - Carga (Collection Runner)**: cria Cliente + Conta com dados aleatórios (`{{$randomEmail}}`, CPF e número de conta gerados por script) — pensada para rodar com muitas iterações no **Collection Runner** do Postman (ou via `newman run ... -n 50`) sem esbarrar nos índices únicos de Email/NumeroConta.
+- **5 - Limpeza**: remove o cliente e a conta criados nas pastas 1 e 2 (rodar por último, manualmente).
+
+Importe o arquivo no Postman, rode a pasta **0** primeiro (para ter um token válido) e depois as demais na ordem.
 
 ---
 
