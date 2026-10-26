@@ -1,0 +1,18 @@
+<Solution>
+  <Folder Name="/0 - Presentation/">
+    <Project Path="Banco.API/Banco.API.csproj" />
+  </Folder>
+  <Folder Name="/1 - Application/">
+    <Project Path="Banco.Application/Banco.Application.csproj" />
+  </Folder>
+  <Folder Name="/2 - Domain/">
+    <Project Path="Banco.Domain/Banco.Domain.csproj" />
+  </Folder>
+  <Folder Name="/3 - Infrastructure/">
+    <Project Path="Banco.Infrastructure/Banco.Infrastructure.csproj" />
+    <Project Path="Banco.IoC/Banco.IoC.csproj" />
+  </Folder>
+  <Folder Name="/4 - Tests/">
+    <Project Path="Banco.Tests/Banco.Tests.csproj" />
+  </Folder>
+</Solution>

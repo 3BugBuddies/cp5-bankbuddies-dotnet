@@ -1,0 +1,14 @@
+## Build results
+[Bb]in/
+[Oo]bj/
+.vs/
+
+## Segredos locais — NUNCA versionar (contém credencial real do Oracle)
+Banco.API/appsettings.Development.json
+
+## Logs gerados pelo Serilog
+Banco.API/logs/
+
+## Arquivos de usuário do Visual Studio
+*.user
+*.suo
