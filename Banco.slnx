@@ -1,19 +1,13 @@
 <Solution>
-  <Folder Name="/0 - Presentation/">
-    <Project Path="Banco.API/Banco.API.csproj" />
+  <Folder Name="/Src/">
+    <Project Path="src/Banco.API/Banco.API.csproj" />
+    <Project Path="src/Banco.Application/Banco.Application.csproj" />
+    <Project Path="src/Banco.Domain/Banco.Domain.csproj" />
+    <Project Path="src/Banco.Infrastructure/Banco.Infrastructure.csproj" />
+    <Project Path="src/Banco.IoC/Banco.IoC.csproj" />
   </Folder>
-  <Folder Name="/1 - Application/">
-    <Project Path="Banco.Application/Banco.Application.csproj" />
-  </Folder>
-  <Folder Name="/2 - Domain/">
-    <Project Path="Banco.Domain/Banco.Domain.csproj" />
-  </Folder>
-  <Folder Name="/3 - Infrastructure/">
-    <Project Path="Banco.Infrastructure/Banco.Infrastructure.csproj" />
-    <Project Path="Banco.IoC/Banco.IoC.csproj" />
-  </Folder>
-  <Folder Name="/4 - Tests/">
-    <Project Path="Banco.Tests.Unit/Banco.Tests.Unit.csproj" />
-    <Project Path="Banco.Tests.Integration/Banco.Tests.Integration.csproj" />
+  <Folder Name="/Tests/">
+    <Project Path="tests/Banco.Tests.Unit/Banco.Tests.Unit.csproj" />
+    <Project Path="tests/Banco.Tests.Integration/Banco.Tests.Integration.csproj" />
   </Folder>
 </Solution>
