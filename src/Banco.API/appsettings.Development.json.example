@@ -8,5 +8,5 @@
   "ConnectionStrings": {
     "Oracle": "Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=oracle.fiap.com.br)(PORT=1521))) (CONNECT_DATA=(SERVER=DEDICATED)(SID=ORCL)));User Id=RM;Password=Senha;"
   },
-  "Secretkey": "u?-jI<3nm059h&CY8zq3mg$[_=n{X1:u"
+  "Secretkey": "Insira_uma_secret_key_aqui"
 }
