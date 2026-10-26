@@ -1,0 +1,427 @@
+{
+  "info": {
+    "name": "Banco API - CP5",
+    "description": "Coleção de testes manuais e de carga para a Banco API (CP5 - Advanced Business Development with .NET). Cobre Cliente, Conta, Auth/User e Health Checks.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{token}}", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5299", "type": "string" },
+    { "key": "token", "value": "", "type": "string" },
+    { "key": "clienteId", "value": "", "type": "string" },
+    { "key": "contaId", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "0 - Autenticação",
+      "item": [
+        {
+          "name": "Criar usuário admin",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/user", "host": ["{{baseUrl}}"], "path": ["api", "user"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Admin\",\n  \"email\": \"admin@teste.com\",\n  \"password\": \"Senha123!\",\n  \"cofirmPassword\": \"Senha123!\",\n  \"role\": \"admin\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login (salva o token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json && json.jwt) {",
+                  "    pm.collectionVariables.set('token', json.jwt);",
+                  "    console.log('Token salvo na variável {{token}}');",
+                  "}",
+                  "pm.test('Login retornou 200 e token JWT', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    pm.expect(json.jwt).to.be.a('string');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth", "host": ["{{baseUrl}}"], "path": ["api", "auth"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@teste.com\",\n  \"senha\": \"Senha123!\"\n}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "1 - Cliente",
+      "item": [
+        {
+          "name": "Listar clientes (paginado)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/cliente?Deslocamento=0&RegistroRetornado=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "cliente"],
+              "query": [
+                { "key": "Deslocamento", "value": "0" },
+                { "key": "RegistroRetornado", "value": "10" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar clientes SEM token (espera 401)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/cliente?Deslocamento=0&RegistroRetornado=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "cliente"],
+              "query": [
+                { "key": "Deslocamento", "value": "0" },
+                { "key": "RegistroRetornado", "value": "10" }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Sem token retorna 401 (Unauthorized)', function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Criar cliente (salva clienteId)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json && json.id) {",
+                  "    pm.collectionVariables.set('clienteId', json.id);",
+                  "    console.log('clienteId salvo: ' + json.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/cliente", "host": ["{{baseUrl}}"], "path": ["api", "cliente"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João da Silva\",\n  \"email\": \"joao.{{$timestamp}}@email.com\",\n  \"cpf\": \"12345678900\",\n  \"idade\": 30\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obter cliente por id",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/cliente/{{clienteId}}", "host": ["{{baseUrl}}"], "path": ["api", "cliente", "{{clienteId}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Editar cliente",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/cliente/{{clienteId}}", "host": ["{{baseUrl}}"], "path": ["api", "cliente", "{{clienteId}}"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João da Silva Atualizado\",\n  \"email\": \"joao.atualizado@email.com\",\n  \"cpf\": \"12345678900\",\n  \"idade\": 31\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obter endereço por CEP (serviço externo)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/cliente/endereco/01001000", "host": ["{{baseUrl}}"], "path": ["api", "cliente", "endereco", "01001000"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2 - Conta",
+      "item": [
+        {
+          "name": "Listar contas (paginado)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/conta?Deslocamento=0&RegistroRetornado=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "conta"],
+              "query": [
+                { "key": "Deslocamento", "value": "0" },
+                { "key": "RegistroRetornado", "value": "10" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar contas de um cliente",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/conta/cliente/{{clienteId}}", "host": ["{{baseUrl}}"], "path": ["api", "conta", "cliente", "{{clienteId}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Criar conta (salva contaId)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json && json.id) {",
+                  "    pm.collectionVariables.set('contaId', json.id);",
+                  "    console.log('contaId salvo: ' + json.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/conta", "host": ["{{baseUrl}}"], "path": ["api", "conta"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"numeroConta\": \"{{$timestamp}}\",\n  \"agencia\": \"0001\",\n  \"saldo\": 500,\n  \"tipoConta\": \"Corrente\",\n  \"clienteId\": {{clienteId}}\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obter conta por id",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/conta/{{contaId}}", "host": ["{{baseUrl}}"], "path": ["api", "conta", "{{contaId}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Editar conta",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/conta/{{contaId}}", "host": ["{{baseUrl}}"], "path": ["api", "conta", "{{contaId}}"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"numeroConta\": \"{{$timestamp}}\",\n  \"agencia\": \"0002\",\n  \"saldo\": 1500,\n  \"tipoConta\": \"Poupanca\",\n  \"clienteId\": {{clienteId}}\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar contas SEM token (aberto, sempre 200/204)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/conta?Deslocamento=0&RegistroRetornado=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "conta"],
+              "query": [
+                { "key": "Deslocamento", "value": "0" },
+                { "key": "RegistroRetornado", "value": "10" }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3 - Health",
+      "item": [
+        {
+          "name": "Health live",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/health/live", "host": ["{{baseUrl}}"], "path": ["health", "live"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Health db (Oracle)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/health/db", "host": ["{{baseUrl}}"], "path": ["health", "db"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Health2 live (controller)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/health2/live", "host": ["{{baseUrl}}"], "path": ["api", "health2", "live"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Health2 db (controller)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/health2/db", "host": ["{{baseUrl}}"], "path": ["api", "health2", "db"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4 - Carga (Collection Runner)",
+      "description": "Pensado para rodar com o Collection Runner (ou Newman) com muitas iterações. Cada execução cria um Cliente e uma Conta com dados aleatórios, sem esbarrar nos índices únicos de Email/NumeroConta. Rode primeiro '0 - Autenticação > Login' para ter um token válido.",
+      "item": [
+        {
+          "name": "Criar cliente (dados aleatórios)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const cpf = Array.from({length: 11}, () => Math.floor(Math.random() * 10)).join('');",
+                  "const idade = Math.floor(Math.random() * 62) + 18;",
+                  "pm.variables.set('randomCpf', cpf);",
+                  "pm.variables.set('randomIdade', idade);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json && json.id) {",
+                  "    pm.collectionVariables.set('clienteId', json.id);",
+                  "}",
+                  "pm.test('Cliente criado com sucesso (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/cliente", "host": ["{{baseUrl}}"], "path": ["api", "cliente"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"{{$randomFullName}}\",\n  \"email\": \"{{$randomEmail}}\",\n  \"cpf\": \"{{randomCpf}}\",\n  \"idade\": {{randomIdade}}\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Criar conta (dados aleatórios, usa último clienteId)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Conta criada com sucesso (200)', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/conta", "host": ["{{baseUrl}}"], "path": ["api", "conta"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"numeroConta\": \"{{$timestamp}}{{$randomInt}}\",\n  \"agencia\": \"0001\",\n  \"saldo\": {{$randomInt}},\n  \"tipoConta\": \"Corrente\",\n  \"clienteId\": {{clienteId}}\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar clientes (paginado, para ver o volume gerado)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/cliente?Deslocamento=0&RegistroRetornado=50",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "cliente"],
+              "query": [
+                { "key": "Deslocamento", "value": "0" },
+                { "key": "RegistroRetornado", "value": "50" }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5 - Limpeza",
+      "description": "Rode por último, manualmente — remove o cliente e a conta criados nas pastas 1 e 2. Deletar o cliente também remove a conta em cascata (ON DELETE CASCADE), então a ordem aqui não é obrigatória.",
+      "item": [
+        {
+          "name": "Deletar conta",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/conta/{{contaId}}", "host": ["{{baseUrl}}"], "path": ["api", "conta", "{{contaId}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Deletar cliente",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/api/cliente/{{clienteId}}", "host": ["{{baseUrl}}"], "path": ["api", "cliente", "{{clienteId}}"] }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
