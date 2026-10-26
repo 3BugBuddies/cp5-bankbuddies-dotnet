@@ -13,6 +13,7 @@
     <Project Path="Banco.IoC/Banco.IoC.csproj" />
   </Folder>
   <Folder Name="/4 - Tests/">
-    <Project Path="Banco.Tests/Banco.Tests.csproj" />
+    <Project Path="Banco.Tests.Unit/Banco.Tests.Unit.csproj" />
+    <Project Path="Banco.Tests.Integration/Banco.Tests.Integration.csproj" />
   </Folder>
 </Solution>

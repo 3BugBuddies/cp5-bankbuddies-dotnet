@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
 using System.Net;
 
-namespace Banco.Tests.App
+namespace Banco.Tests.Integration
 {
     public class ClienteCustomWebApplicationFactory : WebApplicationFactory<Program>
     {

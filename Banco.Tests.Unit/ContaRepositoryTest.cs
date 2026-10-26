@@ -3,7 +3,7 @@ using Banco.API.Infrastructure.Data;
 using Banco.API.Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace Banco.Tests.App
+namespace Banco.Tests.Unit
 {
     public class ContaRepositoryTest
     {

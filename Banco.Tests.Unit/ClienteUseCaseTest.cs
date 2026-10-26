@@ -5,7 +5,7 @@ using Banco.API.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace Banco.Tests.App
+namespace Banco.Tests.Unit
 {
     public class ClienteUseCaseTest
     {
