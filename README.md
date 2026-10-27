@@ -309,4 +309,5 @@ Importe o arquivo no Postman, rode a pasta **0** primeiro (para ter um token vá
 
 ## Vídeo de Demonstração
 
-[PREENCHER: link do vídeo (máx. 5 minutos) após a gravação]
+| **Vídeo** | [Youtube](https://youtu.be/Yep3g2fbKQ0) |
+| --- | --- |
